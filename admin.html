@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Delish Dine Admin Panel</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #fff8f0;
+  margin: 0;
+  padding: 0;
+}
+header {
+  background: #ff4500;
+  color: white;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+header h1 { margin: 0; }
+a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+.container {
+  max-width: 900px;
+  margin: 40px auto;
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+th, td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: center;
+}
+th { background: #ff4500; color: white; }
+button {
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+button:hover { background: #218838; }
+.clear-btn {
+  background: #dc3545;
+}
+.clear-btn:hover {
+  background: #c82333;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🍽️ Delish Dine Admin Panel</h1>
+  <a href="home..html">🏠 Back to Home</a>
+</header>
+
+<div class="container">
+  <h2>Customer Orders</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Items</th>
+        <th>Total</th>
+        <th>Date</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="ordersTable"></tbody>
+  </table>
+  <br>
+  <button class="clear-btn" onclick="clearAll()">🗑 Clear All Orders</button>
+</div>
+
+<script>
+function loadOrders() {
+  const orders = JSON.parse(localStorage.getItem("orders")) || [];
+  const table = document.getElementById("ordersTable");
+  table.innerHTML = "";
+
+  if (orders.length === 0) {
+    table.innerHTML = `<tr><td colspan="7">No orders found.</td></tr>`;
+    return;
+  }
+
+  orders.forEach((o, i) => {
+    table.innerHTML += `
+      <tr>
+        <td>${o.name}</td>
+        <td>${o.email}</td>
+        <td>${o.items.map(it => it.name).join(", ")}</td>
+        <td>₱${o.total}</td>
+        <td>${o.date}</td>
+        <td style="color:${o.status === "Completed" ? "green" : "orange"}">${o.status}</td>
+        <td>
+          ${o.status === "Pending"
+            ? `<button onclick="markComplete(${i})">Complete</button>`
+            : "✔"}
+        </td>
+      </tr>
+    `;
+  });
+}
+
+function markComplete(i) {
+  const orders = JSON.parse(localStorage.getItem("orders")) || [];
+  orders[i].status = "Completed";
+  localStorage.setItem("orders", JSON.stringify(orders));
+  loadOrders();
+}
+
+function clearAll() {
+  if (confirm("Are you sure you want to delete all orders?")) {
+    localStorage.removeItem("orders");
+    loadOrders();
+  }
+}
+
+loadOrders();
+</script>
+
+</body>
+</html>

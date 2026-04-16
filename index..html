@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Delish Dine | Food Website</title>
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      margin: 0;
+      background: #fff8f0;
+      color: #333;
+      overflow-x: hidden;
+    }
+
+    nav {
+      background-color: #ff4500;
+      color: white;
+      padding: 15px 0;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    nav ul { list-style: none; margin: 0; padding: 0; }
+    nav li { display: inline; margin: 0 18px; }
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 18px;
+      transition: color 0.3s ease, border-bottom 0.3s ease;
+    }
+    nav a:hover { border-bottom: 2px solid #fff; padding-bottom: 3px; }
+
+    h1, h2 { text-align: center; }
+
+    .form-container {
+      background-color: white;
+      margin: 40px auto;
+      padding: 25px;
+      width: 320px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      animation: fadeIn 0.6s ease-in;
+    }
+
+    input, button, textarea, select {
+      width: 95%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background-color: #ff4500;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background 0.3s ease;
+    }
+    button:hover { background-color: #e03e00; }
+
+    #message {
+      text-align: center;
+      font-weight: bold;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+      margin-top: 15px;
+    }
+
+    section {
+      padding: 40px 20px;
+      display: none;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    section.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    #home {
+      text-align: center;
+      background: linear-gradient(to right, #fff8f0, #ffe6d3);
+      border-radius: 10px;
+    }
+
+    #home p {
+      max-width: 800px;
+      margin: 0 auto 20px;
+    }
+
+    .food-item {
+      display: inline-block;
+      width: 220px;
+      margin: 15px;
+      text-align: center;
+      background-color: #fff;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .food-item:hover { transform: translateY(-10px); box-shadow: 0 6px 20px rgba(0,0,0,0.15); }
+    .food-item img { width: 100%; border-radius: 10px; }
+
+    .stars { color: gold; font-size: 18px; margin: 5px 0; }
+
+    #about, #contact, #menu, #cart { text-align: center; }
+
+    .gallery {
+      display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 20px;
+    }
+    .gallery img {
+      width: 250px; height: 180px; border-radius: 10px; object-fit: cover;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.2); transition: transform 0.3s;
+    }
+    .gallery img:hover { transform: scale(1.05); }
+
+    #feedback {
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      margin: 30px auto;
+      width: 90%;
+      max-width: 600px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    #cart-items li { list-style: none; margin: 5px 0; }
+
+    footer {
+      background-color:transparent; color: white;
+      text-align: center; padding: 15px; font-size: 14px;
+    }
+    footer a { color: #333; text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      padding: 40px 20px;
+      background: linear-gradient(135deg, #fff4e6, #ffe0cc);
+      border-radius: 12px;
+      animation: fadeSlide 1s ease-in-out;
+    }
+
+    .hero-img {
+      width: 380px;
+      border-radius: 15px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+      margin: 15px;
+      animation: zoomIn 1.5s ease;
+    }
+
+    .hero-text {
+      max-width: 500px;
+      text-align: left;
+      animation: fadeInUp 1s ease;
+    }
+
+    .hero-text h1 {
+      font-size: 32px;
+      color: #ff4500;
+      margin-bottom: 10px;
+    }
+
+    .hero-text span {
+      color: #ff7b00;
+    }
+
+    .hero-text p {
+      font-size: 16px;
+      color: #555;
+    }
+
+    .explore-btn {
+      background-color: #ff4500;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 16px;
+      margin-top: 10px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .explore-btn:hover {
+      background-color: #e03e00;
+    }
+
+    .highlights {
+      display: flex;
+      justify-content: center;
+      gap: 25px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+      animation: fadeIn 1.2s ease;
+    }
+
+    .highlight {
+      background: white;
+      padding: 15px;
+      width: 220px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .highlight:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    }
+
+    .highlight img {
+      width: 100%;
+      height: 150px;
+      border-radius: 10px;
+      object-fit: cover;
+      margin-bottom: 10px;
+    }
+
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(50px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes zoomIn {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Checkout Summary Design */
+    #checkout-summary ul {
+      list-style: none;
+      padding: 0;
+      text-align: left;
+    }
+
+    #checkout-summary li {
+      background: #fff8f0;
+      padding: 8px 10px;
+      margin: 6px 0;
+      border-radius: 5px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+  </style>
+</head>
+<body>
+
+  <nav id="navbar" style="display:none;">
+    <ul>
+      <li><a href="#" onclick="showSection('home')">Home</a></li>
+      <li><a href="#" onclick="showSection('menu')">Menu</a></li>
+      <li><a href="#" onclick="showSection('about')">About</a></li>
+      <li><a href="#" onclick="showSection('contact')">Contact</a></li>
+      <li><a href="#" onclick="showSection('cart')">Cart (<span id="cart-count">0</span>)</a></li>
+      <li><a href="#" onclick="logout()">Logout</a></li>
+    </ul>
+  </nav>
+
+  <div id="message"></div>
+
+  <div id="register" class="form-container">
+    <h2>Register</h2>
+    <input type="text" id="reg-name" placeholder="Name" required />
+    <input type="email" id="reg-email" placeholder="Email" required />
+    <input type="password" id="reg-password" placeholder="Password" required />
+    <button onclick="register()">Register</button>
+    <p>Already have an account? <a href="#" onclick="showLogin()">Login</a></p>
+  </div>
+
+  <div id="login" class="form-container" style="display:none;">
+    <h2>Login</h2>
+    <input type="email" id="login-email" placeholder="Email" required />
+    <input type="password" id="login-password" placeholder="Password" required />
+    <button onclick="login()">Login</button>
+    <p>Don’t have an account? <a href="#" onclick="showRegister()">Register</a></p>
+  </div>
+
+  <section id="home" style="display:none;">
+    <div class="hero">
+      <img src="mmos.jpg" alt="Delicious Food" class="hero-img">
+      <div class="hero-text">
+        <h1>Welcome to <span>Delish Dine with Sumanduran 🍽️</span></h1>
+        <p>Experience the taste of happiness! Freshly cooked Filipino favorites and international dishes delivered straight to your door.</p>
+        <button class="explore-btn" onclick="showSection('menu')">Explore Menu 🍲</button>
+      </div>
+    </div>
+
+    <h2>✨ Best Sellers ✨</h2>
+    <div class="highlights">
+      <div class="highlight">
+        <img src="mughlai-biryani.jpg" alt="Sisig">
+        <h3>mughlai-biryani</h3>
+        <p>Crunchy and savory — a local favorite!</p>
+      </div>
+      <div class="highlight">
+        <img src="pasta.jpg" alt="Pasta">
+        <h3>Carbonara</h3>
+        <p>Creamy pasta goodness topped with crispy bacon bits.</p>
+      </div>
+      <div class="highlight">
+        <img src="Hot-Chocolate-12.jpg" alt="Hot Choco">
+        <h3>Hot Choco</h3>
+        <p>Creamy and tasty hot chocolate drink.</p>
+      </div>
+      <div class="highlight">
+        <img src="hyd-Mutton-Biryani.jpg" alt="Dessert">
+        <h3>hyd-Mutton-Biryani</h3>
+        <p>Classic Filipino dessert — smooth, sweet, and perfect.</p>
+      </div>
+    </div>
+   <footer>
+    <p>© 2025 Delish Dine by Raniel Sumanduran 🍴 | All Rights Reserved.</p>
+  </footer>
+
+  </section>
+
+  <section id="menu">
+    <h2>Our Menu</h2>
+    <div class="food-item">
+      <img src="93393012.jpg" alt="Adobo">
+      <h3>Lechon Chicken</h3>
+      <div class="stars">⭐⭐⭐⭐☆</div>
+      <p>₱130</p>
+      <button onclick="addToCart('Lechon Chicken',130)">Add to Cart</button>
+    </div>
+
+    <div class="food-item">
+      <img src="Hamburger_(12164386105).jpg" alt="Burger">
+      <h3>Beef Burger</h3>
+      <div class="stars">⭐⭐⭐⭐⭐</div>
+      <p>₱50</p>
+      <button onclick="addToCart('Beef Burger',50)">Add to Cart</button>
+    </div>
+
+    <div class="food-item">
+      <img src="0_oTfm1pTXLxitHHFy.jpg" alt="Pizza">
+      <h3>Pizza Nich</h3>
+      <div class="stars">⭐⭐⭐⭐⭐</div>
+      <p>₱90</p>
+      <button onclick="addToCart('Pizza Nich',90)">Add to Cart</button>
+    </div>
+
+    <div class="food-item">
+      <img src="Spaghetti-and-Meatballs-1200x1554.jpg" alt="Pasta">
+      <h3>Spaghetti Meatball Bolognese</h3>
+      <div class="stars">⭐⭐⭐⭐☆</div>
+      <p>₱35</p>
+      <button onclick="addToCart('Spaghetti Meatball Bolognese',35)">Add to Cart</button>
+    </div>
+
+    <div class="food-item">
+      <img src="cebulechon.jpg" alt="Cebu Lechon">
+      <h3>Cebu Lechon Piggy</h3>
+      <div class="stars">⭐⭐⭐⭐☆</div>
+      <p>₱180</p>
+      <button onclick="addToCart('Cebu Lechon Piggy',180)">Add to Cart</button>
+    </div>
+
+    <div class="food-item">
+      <img src="Chicken-Masala.jpeg" alt="Halo-halo">
+      <h3>Chicken-Masala</h3>
+      <div class="stars">⭐⭐⭐☆☆</div>
+      <p>₱90</p>
+      <button onclick="addToCart('Halo-halo',90)">Add to Cart</button>
+    </div>
+  </section>
+
+  <section id="about">
+    <h2>About Delish Dine</h2>
+    <p>Delish Dine began as a humble kitchen in Manila. Today, we deliver joy nationwide, one plate at a time.</p>
+
+    <div class="gallery">
+      <img src="https://images.unsplash.com/photo-1600891964599-f61ba0e24092" alt="Chef">
+      <img src="https://images.unsplash.com/photo-1550547660-d9450f859349" alt="Fried Chicken">
+      <img src="https://images.unsplash.com/photo-1627308595229-7830a5c91f9f" alt="Dessert">
+    </div>
+
+    <div id="feedback">
+      <h3>Customer Feedback 💬</h3>
+      <textarea id="feedbackText" placeholder="Share your thoughts..." rows="3"></textarea>
+      <select id="feedbackRating">
+        <option value="5">⭐⭐⭐⭐⭐ (Excellent)</option>
+        <option value="4">⭐⭐⭐⭐ (Good)</option>
+        <option value="3">⭐⭐⭐ (Average)</option>
+        <option value="2">⭐⭐ (Poor)</option>
+        <option value="1">⭐ (Bad)</option>
+      </select>
+      <button onclick="submitFeedback()">Submit Feedback</button>
+      <div class="feedback-list" id="feedbackList"></div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <h2>Contact Us</h2>
+    <p>📍 Address: 123 Food Street, Taste City</p>
+    <p>📞 Phone: +63 912 345 6789</p>
+    <p>📧 Email: sumanduranraniel144@gmail.com</p>
+  </section>
+
+  <section id="cart">
+    <h2>Your Cart</h2>
+    <ul id="cart-items"></ul>
+    <h3 id="cart-total">Total: ₱0</h3>
+    <button onclick="showCheckoutSummary()">Checkout</button>
+  </section>
+
+  <section id="checkout-summary" class="form-container" style="display:none;">
+    <h2>Checkout Summary</h2>
+    <ul id="checkout-details"></ul>
+    <h3 id="checkout-total"></h3>
+    <button onclick="confirmCheckout()">Confirm Order</button>
+    <button onclick="cancelCheckout()">Cancel</button>
+  </section>
+<script>
+let cart = [];
+
+function showSection(id) {
+  document.querySelectorAll("section").forEach(sec => {
+    sec.classList.remove("active");
+    sec.style.display = "none";
+  });
+  document.getElementById(id).style.display = "block";
+  setTimeout(() => document.getElementById(id).classList.add("active"), 10);
+}
+
+function register() {
+  const name = document.getElementById("reg-name").value.trim();
+  const email = document.getElementById("reg-email").value.trim();
+  const password = document.getElementById("reg-password").value.trim();
+
+  if (!name || !email || !password) {
+    alert("Please fill out all fields.");
+    return;
+  }
+
+  localStorage.setItem("user", JSON.stringify({ name, email, password }));
+  showMessage("Registration successful! Please log in.");
+  showLogin();
+}
+
+function login() {
+  const email = document.getElementById("login-email").value.trim();
+  const password = document.getElementById("login-password").value.trim();
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  // ✅ Admin login
+  if (email === "admin@gmail.com" && password === "admin123") {
+    window.location.href = "admin.html";
+    return;
+  }
+
+  if (!user || user.email !== email || user.password !== password) {
+    alert("Invalid credentials!");
+    return;
+  }
+
+  showMessage(`Welcome, ${user.name}!`);
+  document.getElementById("navbar").style.display = "block";
+  document.getElementById("login").style.display = "none";
+  document.getElementById("register").style.display = "none";
+  showSection("home");
+}
+
+function logout() {
+  showMessage("Logged out successfully.");
+  document.getElementById("navbar").style.display = "none";
+  document.querySelectorAll("section").forEach(sec => (sec.style.display = "none"));
+  document.getElementById("login").style.display = "block";
+}
+
+function showRegister() {
+  document.getElementById("register").style.display = "block";
+  document.getElementById("login").style.display = "none";
+}
+
+function showLogin() {
+  document.getElementById("register").style.display = "none";
+  document.getElementById("login").style.display = "block";
+}
+
+function addToCart(name, price) {
+  cart.push({ name, price });
+  updateCart();
+}
+
+function updateCart() {
+  const cartItems = document.getElementById("cart-items");
+  cartItems.innerHTML = "";
+  let total = 0;
+
+  cart.forEach(item => {
+    const li = document.createElement("li");
+    li.textContent = `${item.name} - ₱${item.price}`;
+    cartItems.appendChild(li);
+    total += item.price;
+  });
+
+  document.getElementById("cart-total").textContent = `Total: ₱${total}`;
+  document.getElementById("cart-count").textContent = cart.length;
+}
+
+function showCheckoutSummary() {
+  if (cart.length === 0) return alert("Your cart is empty!");
+  const summary = document.getElementById("checkout-details");
+  summary.innerHTML = "";
+  let total = 0;
+
+  cart.forEach(item => {
+    const li = document.createElement("li");
+    li.textContent = `${item.name} - ₱${item.price}`;
+    summary.appendChild(li);
+    total += item.price;
+  });
+
+  document.getElementById("checkout-total").textContent = `Total: ₱${total}`;
+  showSection("checkout-summary");
+}
+
+function confirmCheckout() {
+  const user = JSON.parse(localStorage.getItem("user"));
+  if (!user) return alert("Please login first!");
+
+  const orders = JSON.parse(localStorage.getItem("orders")) || [];
+  const newOrder = {
+    name: user.name,
+    email: user.email,
+    items: cart,
+    total: cart.reduce((a, b) => a + b.price, 0),
+    date: new Date().toLocaleString(),
+    status: "Pending"
+  };
+  orders.push(newOrder);
+  localStorage.setItem("orders", JSON.stringify(orders));
+
+  alert("✅ Order placed successfully! Thank you for ordering at Delish Dine 🍽️");
+  cart = [];
+  updateCart();
+  showSection("home");
+}
+
+function cancelCheckout() {
+  alert("❌ Checkout canceled.");
+  showSection("cart");
+}
+
+function showMessage(msg) {
+  const el = document.getElementById("message");
+  el.textContent = msg;
+  el.style.opacity = 1;
+  setTimeout(() => (el.style.opacity = 0), 3000);
+}
+
+function submitFeedback() {
+  const text = document.getElementById("feedbackText").value.trim();
+  const rating = document.getElementById("feedbackRating").value;
+  if (!text) return alert("Please enter feedback!");
+
+  const div = document.createElement("div");
+  div.textContent = `${"⭐".repeat(rating)} - ${text}`;
+  document.getElementById("feedbackList").appendChild(div);
+
+  document.getElementById("feedbackText").value = "";
+  alert("Thank you for your feedback!");
+}
+</script>
+
+</body>
+</html>
